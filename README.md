@@ -1,30 +1,29 @@
-# DownMusic para CasaOS
+# DownMusic
 
 Aplicação local para baixar áudio de vídeos ou playlists do YouTube como MP3, com campos para escolher a pasta e opções para corrigir artista e álbum. Os itens do trabalho ficam juntos em `pasta escolhida/título.mp3`; só títulos repetidos recebem um sufixo numérico para evitar sobrescrita.
 
 ## Iniciar com Docker Compose
 
-1. Instale Docker e Docker Compose no servidor CasaOS.
-2. Copie esta pasta para o servidor ou clone o repositório.
-3. Copie `.env.example` para `.env` ao lado do `docker-compose.yml` e ajuste a pasta persistente:
+1. Com o Docker e o Docker Compose instalados, abra o terminal na pasta do projeto.
+2. Para salvar os MP3 em `./download`, copie `.env.example` para `.env` ao lado do `docker-compose.yml` e use esta configuração.
 
    ```env
    WEB_PORT=8080
-   DOWNLOADS_PATH=/DATA/Media/DownMusic
+   DOWNLOADS_PATH=./download
    ```
 
-   `DOWNLOADS_PATH` é uma pasta do host CasaOS. Ela será montada em `/downloads` no container; os MP3 continuarão disponíveis nessa pasta após atualizar ou recriar o container. A pasta precisa permitir escrita pelo UID `10001` usado pela aplicação. Crie a pasta e ajuste suas permissões no host antes de iniciar.
+3. Crie a pasta `download` na raiz do projeto. No Linux, ela precisa permitir escrita pelo UID `10001`, usado pelo contêiner. Para uma pasta recém-criada, use `sudo chown 10001 ./download`.
 
-4. No terminal do CasaOS, entre na pasta que contém o `Dockerfile` e o `docker-compose.yml` e execute:
+4. Construa a imagem e inicie o contêiner.
 
    ```sh
    docker compose up -d --build
-   docker compose ps -a
+   docker compose ps
    ```
 
-5. Abra `http://IP_DO_CASAOS:8080` (ou a porta escolhida em `WEB_PORT`).
+5. Abra `http://localhost:8080` ou use a porta definida em `WEB_PORT`.
 
-O Compose constrói a imagem local `downmusic:latest` a partir do `Dockerfile`. A configuração declara `downmusic` como imagem e `latest` como tag para o CasaOS. Se você já tinha criado o contêiner com o Compose anterior, execute o passo 4 na mesma pasta para recriá-lo com a imagem nomeada.
+O Compose monta a pasta indicada em `DOWNLOADS_PATH` como `/downloads` no contêiner. Os MP3 ficam na pasta do host mesmo após recriar o contêiner.
 
 ## Uso
 
