@@ -15,15 +15,16 @@ Aplicação local para baixar áudio de vídeos ou playlists do YouTube como MP3
 
    `DOWNLOADS_PATH` é uma pasta do host CasaOS. Ela será montada em `/downloads` no container; os MP3 continuarão disponíveis nessa pasta após atualizar ou recriar o container. A pasta precisa permitir escrita pelo UID `10001` usado pela aplicação. Crie a pasta e ajuste suas permissões no host antes de iniciar.
 
-4. Inicie:
+4. No terminal do CasaOS, entre na pasta que contém o `Dockerfile` e o `docker-compose.yml` e execute:
 
    ```sh
    docker compose up -d --build
+   docker compose ps -a
    ```
 
 5. Abra `http://IP_DO_CASAOS:8080` (ou a porta escolhida em `WEB_PORT`).
 
-No catálogo de apps do CasaOS, também é possível criar um app personalizado usando a imagem construída com este Dockerfile, publicar a porta `8080` e mapear a pasta de destino desejada do host para `/downloads`.
+O Compose constrói a imagem local `downmusic:latest` a partir do `Dockerfile`. A configuração declara `downmusic` como imagem e `latest` como tag para o CasaOS. Se você já tinha criado o contêiner com o Compose anterior, execute o passo 4 na mesma pasta para recriá-lo com a imagem nomeada.
 
 ## Uso
 

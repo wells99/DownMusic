@@ -1,6 +1,8 @@
 services:
   downmusic:
     build: .
+    image: downmusic:latest
+    pull_policy: build
     container_name: downmusic
     restart: unless-stopped
     ports:

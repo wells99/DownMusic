@@ -393,27 +393,28 @@ def create_job():
     return jsonify(job), 202
 
 
-@app.get("/api/files")
-def list_files():
-    files = []
-    for path in DOWNLOAD_DIR.rglob("*.mp3"):
-        try:
-            if ".staging" in path.relative_to(DOWNLOAD_DIR).parts:
-                continue
-            resolved = path.resolve()
-            if DOWNLOAD_DIR in resolved.parents and resolved.is_file():
-                files.append(
-                    {
-                        "name": path.name,
-                        "path": str(path.relative_to(DOWNLOAD_DIR)).replace("\\", "/"),
-                        "size": path.stat().st_size,
-                        "modified": path.stat().st_mtime,
-                    }
-                )
-        except OSError:
-            continue
-    files.sort(key=lambda item: item["modified"], reverse=True)
-    return jsonify(files[:100])
+# Biblioteca desativada. Reative esta rota junto com a seção no HTML e a consulta em app.js.
+# @app.get("/api/files")
+# def list_files():
+#     files = []
+#     for path in DOWNLOAD_DIR.rglob("*.mp3"):
+#         try:
+#             if ".staging" in path.relative_to(DOWNLOAD_DIR).parts:
+#                 continue
+#             resolved = path.resolve()
+#             if DOWNLOAD_DIR in resolved.parents and resolved.is_file():
+#                 files.append(
+#                     {
+#                         "name": path.name,
+#                         "path": str(path.relative_to(DOWNLOAD_DIR)).replace("\\", "/"),
+#                         "size": path.stat().st_size,
+#                         "modified": path.stat().st_mtime,
+#                     }
+#                 )
+#         except OSError:
+#             continue
+#     files.sort(key=lambda item: item["modified"], reverse=True)
+#     return jsonify(files[:100])
 
 
 @app.get("/files/<path:relative_path>")
