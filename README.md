@@ -1,6 +1,6 @@
 # DownMusic para CasaOS
 
-Aplicação local para baixar áudio de vídeos ou playlists do YouTube como MP3, com campos opcionais para corrigir artista e álbum. A saída padrão segue `uploader/título [id].mp3`, com o ID do YouTube para evitar colisões entre títulos repetidos.
+Aplicação local para baixar áudio de vídeos ou playlists do YouTube como MP3, com campos para escolher a pasta e opções para corrigir artista e álbum. Os itens do trabalho ficam juntos em `pasta escolhida/título.mp3`; só títulos repetidos recebem um sufixo numérico para evitar sobrescrita.
 
 ## Iniciar com Docker Compose
 
@@ -30,8 +30,11 @@ No catálogo de apps do CasaOS, também é possível criar um app personalizado 
 - Cole uma URL de vídeo ou playlist do YouTube.
 - Informe artista se quiser substituir a tag original. Campo vazio preserva o artista existente.
 - Informe álbum se quiser gravar a tag. Campo vazio remove a tag de álbum.
-- Os itens da playlist são processados sequencialmente com pausa aleatória de 5 a 45 segundos antes dos downloads, qualidade MP3 de 192 kbps e cliente YouTube `android`.
+- Escolha o nome da pasta onde os MP3 serão salvos. Os itens de uma playlist vão todos para a mesma pasta, mesmo quando são de canais diferentes.
+- Ajuste a pausa mínima e máxima entre itens de playlist (5–45 segundos). A página mostra a contagem regressiva da pausa escolhida; vídeos individuais não precisam de espera entre itens.
+- Os downloads são processados sequencialmente em MP3 de 192 kbps, usando o cliente YouTube `android`.
 - A capa é incorporada quando houver thumbnail adequada. Vídeos intermediários não são mantidos no diretório de downloads.
+- Avisos rotineiros do `yt-dlp` ficam ocultos na página; em caso de falha, a página mostra o resumo e os detalhes do erro. A tag de número/faixa ID3 (`TRCK`) é removida.
 - Os trabalhos e mensagens recentes ficam em memória (até 50; reiniciar o container limpa o histórico). Os MP3 ficam no volume persistente.
 
 Use somente para conteúdos que você tem direito de baixar e armazenar. Esta primeira versão não usa cookies nem autenticação e deve ficar restrita à rede local.

@@ -1,16 +1,20 @@
 <!doctype html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#111113">
   <title>DownMusic · áudio do YouTube</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="icon" href="{{ url_for('static', filename='DownMusic.ico') }}" type="image/x-icon">
 </head>
+
 <body>
   <main class="shell">
     <header class="topbar">
-      <a class="brand" href="/" aria-label="DownMusic início"><span class="brand-icon">♫</span><span>down<span class="brand-accent">music</span></span></a>
+      <a class="brand" href="/" aria-label="DownMusic início"><span class="brand-icon">♫</span><span>down<span
+            class="brand-accent">music</span></span></a>
       <span class="local-badge"><i></i> Biblioteca local</span>
     </header>
 
@@ -23,29 +27,59 @@
     <section class="panel form-panel">
       <form id="download-form">
         <label for="url">Link do YouTube <span class="required">OBRIGATÓRIO</span></label>
-        <div class="url-wrap"><span class="link-icon">↗</span><input id="url" name="url" type="url" placeholder="https://www.youtube.com/watch?v=..." required autocomplete="url"></div>
+        <div class="url-wrap"><span class="link-icon">↗</span><input id="url" name="url" type="url"
+            placeholder="https://www.youtube.com/watch?v=..." required autocomplete="url"></div>
+        <div class="field folder-field"><label for="folder">Nome da pasta <span>obrigatório</span></label><input
+            id="folder" name="folder" maxlength="100" placeholder="Ex.: Rock 2026" value="YouTube" required><small>Todos
+            os áudios deste trabalho serão salvos juntos nesta pasta.</small></div>
         <div class="fields">
-          <div class="field"><label for="artist">Artista <span>opcional</span></label><input id="artist" name="artist" maxlength="200" placeholder="Mantém o artista original"></div>
-          <div class="field"><label for="album">Álbum <span>opcional</span></label><input id="album" name="album" maxlength="200" placeholder="Em branco remove a tag do álbum"></div>
+          <div class="field"><label for="artist">Artista <span>opcional</span></label><input id="artist" name="artist"
+              maxlength="200" placeholder="Mantém o artista original"></div>
+          <div class="field"><label for="album">Álbum <span>opcional</span></label><input id="album" name="album"
+              maxlength="200" placeholder="Em branco remove a tag do álbum"></div>
         </div>
-        <div class="hint"><span class="hint-icon">♫</span><span>MP3 · 192 kbps <b>•</b> capa incorporada quando disponível <b>•</b> pausa automática de 5 a 45 s</span></div>
+        <div class="fields delay-fields">
+          <div class="field"><label for="delay_min">Pausa mínima <span>segundos</span></label><input id="delay_min"
+              name="delay_min" type="number" min="5" max="45" value="5" required></div>
+          <div class="field"><label for="delay_max">Pausa máxima <span>segundos</span></label><input id="delay_max"
+              name="delay_max" type="number" min="5" max="45" value="45" required></div>
+        </div>
+        <div class="hint"><span class="hint-icon">♫</span><span>MP3 · 192 kbps <b>•</b> capa incorporada quando
+            disponível <b>•</b> pausa aleatória configurável entre itens da playlist</span></div>
         <button id="submit-button" type="submit"><span>Baixar áudio</span><span class="button-arrow">↗</span></button>
         <p class="form-error" id="form-error" role="alert"></p>
       </form>
     </section>
 
     <section class="section-block">
-      <div class="section-heading"><div><span class="eyebrow">ATIVIDADE</span><h2>Downloads recentes</h2></div><span id="queue-count" class="count-pill">0 trabalhos</span></div>
-      <div id="jobs" class="jobs-list"><div class="empty-state"><span>♫</span><p>Seus downloads vão aparecer aqui.</p></div></div>
+      <div class="section-heading">
+        <div><span class="eyebrow">ATIVIDADE</span>
+          <h2>Downloads recentes</h2>
+        </div><span id="queue-count" class="count-pill">0 trabalhos</span>
+      </div>
+      <div id="jobs" class="jobs-list">
+        <div class="empty-state"><span>♫</span>
+          <p>Seus downloads vão aparecer aqui.</p>
+        </div>
+      </div>
     </section>
 
     <section class="section-block library-block">
-      <div class="section-heading"><div><span class="eyebrow">NO SEU SERVIDOR</span><h2>Biblioteca</h2></div><span id="file-count" class="count-pill">0 arquivos</span></div>
-      <div id="files" class="file-list"><div class="empty-state compact"><p>Nenhum MP3 salvo ainda.</p></div></div>
+      <div class="section-heading">
+        <div><span class="eyebrow">NO SEU SERVIDOR</span>
+          <h2>Biblioteca</h2>
+        </div><span id="file-count" class="count-pill">0 arquivos</span>
+      </div>
+      <div id="files" class="file-list">
+        <div class="empty-state compact">
+          <p>Nenhum MP3 salvo ainda.</p>
+        </div>
+      </div>
     </section>
 
     <footer><span>DownMusic</span><span>Baixe apenas conteúdos que você tem direito de guardar.</span></footer>
   </main>
   <script src="{{ url_for('static', filename='app.js') }}" defer></script>
 </body>
+
 </html>

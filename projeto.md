@@ -32,7 +32,7 @@ O resultado esperado de cada download é somente o áudio em MP3, com metadados 
 - Incluir metadados e thumbnail/capa quando disponíveis, convertendo a thumbnail para JPG se necessário.
 - Após a conversão, manter somente o MP3 (e a capa incorporada, se suportada); remover arquivos intermediários de vídeo e temporários com tratamento de falhas.
 - Aplicar artista e álbum solicitados ao MP3 final usando uma biblioteca de tags ID3, validando o resultado e tratando arquivos sem tags existentes.
-- Permitir playlists e evitar colisões de nomes. Proposta inicial de saída: `%(uploader)s/%(playlist_index&{}|)s%(title)s.%(ext)s` ou equivalente validado para o `yt-dlp`; a implementação deve preservar a organização por uploader desejada sem gerar diretórios inválidos quando o uploader estiver ausente. O padrão atual `%(playlist_index)02d - %(title)s` pode ser oferecido como alternativa.
+- Permitir playlists; solicitar o nome da pasta de destino por trabalho e colocar nela os áudios de todos os canais da playlist. Usar o título como nome do MP3, sem ID, acrescentando sufixo numérico somente quando houver colisão.
 
 ### Armazenamento e Docker/CasaOS
 
@@ -56,7 +56,8 @@ O resultado esperado de cada download é somente o áudio em MP3, com metadados 
 - URL: aceitar vídeos e playlists do YouTube.
 - Artista vazio: preservar o artista original; artista informado substitui a tag.
 - Álbum vazio: remover a tag do álbum; preenchido substitui a tag.
-- Saída: `uploader/título [id].mp3`; o ID evita colisões de títulos e uploader ausente usa `Unknown`.
+- Saída: pasta escolhida no formulário e nome baseado no título; títulos repetidos recebem sufixo numérico.
+- Pausa: intervalo mínimo e máximo configuráveis entre 5 e 45 segundos; o usuário pode definir o mesmo valor nos dois campos para usar uma pausa fixa.
 - Histórico: manter no máximo 50 trabalhos recentes em memória; reiniciar o container limpa histórico, mas não os downloads no volume.
 - Temporários: cada trabalho usa `.staging/<id>` e a pasta é removida ao concluir ou falhar.
 - Fila: processamento único por vez, com limite de 50 trabalhos ativos e histórico recente em memória.
@@ -69,18 +70,18 @@ O resultado esperado de cada download é somente o áudio em MP3, com metadados 
 - [x] Confirmado: URLs de vídeo e playlists do YouTube.
 - [x] Definido: campo de artista vazio preserva o metadado original; valor informado substitui a tag.
 - [x] Definido: campo de álbum vazio remove a tag do álbum; valor informado substitui a tag.
-- [x] Definido: pasta por uploader, arquivo por título e ID único; uploader ausente usa `Unknown`.
+- [x] Definido: nome da pasta fornecido no formulário e arquivo baseado no título, sem ID.
 - [x] Definido: histórico em memória limitado aos últimos 50; pasta temporária por trabalho removida ao terminar.
 
 ### 2. Aplicação
 
 - [x] Backend Flask com formulário, validação de host e campos de metadados.
 - [x] Fila sequencial, estados, mensagens resumidas e histórico limitado a 50 trabalhos.
-- [x] Integração `yt-dlp`: cliente `android`, MP3 192 kbps e pausa aleatória entre downloads de 5–45 segundos.
+- [x] Integração `yt-dlp`: cliente `android`, MP3 192 kbps e pausa aleatória configurável entre itens da playlist (5–45 segundos).
 - [x] Docker instala `ffmpeg`; processamento configura conversão JPG e inclusão da thumbnail quando disponível.
 - [x] Aplicação de tags ID3: artista informado substitui; vazio preserva. Álbum informado substitui; vazio remove.
 - [x] Temporários são baixados numa pasta isolada removida após sucesso ou falha; MP3 final é movido ao volume persistente.
-- [x] Caminhos confinados ao volume, saída por uploader/título/ID e sufixo em caso de colisão.
+- [x] Caminhos confinados ao volume, saída na pasta informada e nome baseado no título com sufixo em colisão.
 - [x] Página responsiva com ícone musical, formulário, estado dos trabalhos e lista de MP3s.
 - [x] APIs para enfileirar e acompanhar trabalhos e listar/baixar arquivos MP3.
 
@@ -106,6 +107,26 @@ O resultado esperado de cada download é somente o áudio em MP3, com metadados 
 - [ ] Revisar logs, mensagens de erro, uso de recursos e comportamento ao reiniciar com trabalho pendente.
 - [ ] Revisar documentação e fluxo de instalação no CasaOS.
 
+## Checklist de melhorias solicitadas
+
+### Interface e mensagens
+
+- [x] Ocultar avisos rotineiros do `yt-dlp` na página e exibir detalhes somente quando um trabalho falhar.
+- [x] Permitir configurar a pausa mínima/máxima entre itens e mostrar a duração escolhida com contagem regressiva.
+- [x] Adicionar campo para escolher o nome da pasta de destino.
+
+### Organização e metadados
+
+- [x] Salvar todos os itens de uma playlist na mesma pasta definida para o trabalho, mesmo se vierem de canais diferentes.
+- [x] Remover o ID do vídeo do nome final; usar `Nome do vídeo.mp3` e só acrescentar sufixo em colisões reais.
+- [x] Remover a tag ID3 de número/faixa (`TRCK`) dos MP3s finais.
+
+### Verificação
+
+- [x] Revisar o tratamento de erros, intervalo configurável e atualização da interface.
+- [ ] Conferir em downloads reais playlist, pasta única, nomes sem ID, tag `TRCK` removida e avisos rotineiros ocultos.
+
+
 ## Fora do escopo inicial
 
 - Contas de usuário, autenticação remota ou exposição direta à internet.
@@ -116,5 +137,6 @@ O resultado esperado de cada download é somente o áudio em MP3, com metadados 
 ## Critério de conclusão
 
 A primeira versão estará pronta quando puder ser instalada no CasaOS via Docker, receber uma URL pela interface, baixar o áudio como MP3 com os metadados escolhidos e capa disponível, respeitar o intervalo definido, guardar o resultado no volume persistente escolhido e remover os vídeos/temporários do processamento.
+
 
 
