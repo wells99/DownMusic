@@ -1,0 +1,12 @@
+services:
+  downmusic:
+    build: .
+    container_name: downmusic
+    restart: unless-stopped
+    ports:
+      - "${WEB_PORT:-8080}:8080"
+    environment:
+      DOWNLOAD_DIR: /downloads
+      PORT: "8080"
+    volumes:
+      - ${DOWNLOADS_PATH:-./downloads}:/downloads
